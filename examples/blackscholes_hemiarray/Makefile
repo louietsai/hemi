@@ -26,6 +26,7 @@ HOST_ONLY_FLAGS := -DHEMI_CUDA_DISABLE
 CXX_FLAGS += -O3
 
 CXX_FLAGS += $(DEBUG_FLAGS)
+OPENMP_FLAGS := -fopenmp
 NVCC_FLAGS := $(CXX_FLAGS) $(DEBUG_FLAGS_NVCC) --expt-extended-lambda
 
 all: bs_device bs_host_nvcc bs_host
@@ -37,7 +38,7 @@ bs_host_nvcc: blackscholes.cpp
 	$(NVCC) blackscholes.cpp $(CXX_FLAGS) $(HOST_ONLY_FLAGS) -x c++ -o bs_host_nvcc
 
 bs_host: blackscholes.cpp
-	$(CXX) blackscholes.cpp $(CXX_FLAGS) $(HOST_ONLY_FLAGS) -o bs_host
+	$(CXX) blackscholes.cpp $(CXX_FLAGS) $(HOST_ONLY_FLAGS) $(OPENMP_FLAGS) -o bs_host
 
 clean:
 	rm -rf bs_device bs_host_nvcc bs_host

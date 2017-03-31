@@ -36,7 +36,14 @@ namespace hemi
 	template <typename index_type, typename F>
 	void parallel_for(const ExecutionPolicy &p, index_type first, index_type last, F function) {
 		hemi::launch(p, [=] HEMI_LAMBDA () {
+                        #ifdef HEMI_CUDA_COMPILER
 			for (auto idx : grid_stride_range(first, last)) function(idx);
+                        #else
+                        #pragma omp parallel for
+			for (int idx=first; idx < last;idx++){
+                                function(idx);
+                        }
+                        #endif
 		});
 	}
 
